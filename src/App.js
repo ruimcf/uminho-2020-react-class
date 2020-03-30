@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
-import { getInterestPoints, createInterestPoint } from "./api/interest-points";
+import {
+  getInterestPoints,
+  createInterestPoint,
+  removeInterestPoint,
+} from "./api/interest-points";
 
 function App() {
   const [isLoadingInterestPoints, setIsLoadingInterestPoints] = useState(false);
@@ -8,7 +12,9 @@ function App() {
   const [newPointName, setNewPointName] = useState("");
   const [newInterestPoint, setNewInterestPoint] = useState();
 
-  const addNewInterestPoint = () => {
+  const handleNewPointSubmit = (event) => {
+    event.preventDefault();
+
     createInterestPoint(
       newPointName,
       newInterestPoint.latitude,
@@ -20,7 +26,9 @@ function App() {
   };
 
   const removePoint = (id) => {
-    setMarkers((prevMarkers) => prevMarkers.filter((point) => point.id !== id));
+    removeInterestPoint(id).then(() => {
+      setMarkers((prevMarkers) => prevMarkers.filter((point) => point.id !== id));
+    });
   };
 
   const openNewInterestPointPopup = (event) => {
@@ -86,8 +94,15 @@ function App() {
             key={`${newInterestPoint.latitude}-${newInterestPoint.longitude}`}
             position={[newInterestPoint.latitude, newInterestPoint.longitude]}
           >
-            <input placeholder="Insert name..." onChange={handleNewPointNameChange} />
-            <button onClick={addNewInterestPoint}>Add</button>
+            <form onSubmit={handleNewPointSubmit}>
+              <input
+                autoFocus
+                type="text"
+                placeholder="Insert name..."
+                onChange={handleNewPointNameChange}
+              />
+              <button type="submit">Add</button>
+            </form>
           </Popup>
         )}
       </Map>

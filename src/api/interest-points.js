@@ -12,3 +12,9 @@ export const createInterestPoint = (title, latitude, longitude) => {
     .then((response) => response.json())
     .then((json) => json.interestPoint);
 };
+
+export const removeInterestPoint = (id) => {
+  return fetch(`/interest-points/${id}`, {
+    method: "DELETE",
+  });
+};

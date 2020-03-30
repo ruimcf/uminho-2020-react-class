@@ -22,6 +22,12 @@ new Server({
       return db.interestPoints.find(id);
     });
 
+    this.delete("/interest-points/:id", (db, request) => {
+      const id = request.params.id;
+
+      return db.interestPoints.find(id).destroy();
+    });
+
     this.post("/interest-points", (db, request) => {
       const body = JSON.parse(request.requestBody);
       const { title, latitude, longitude } = body;
