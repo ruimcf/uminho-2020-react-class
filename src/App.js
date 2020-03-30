@@ -1,8 +1,9 @@
-import React, {useState, useEffect} from "react";
-import {Map, TileLayer, Marker, Popup} from "react-leaflet";
-import {getInterestPoints, createInterestPoint} from "./api/interest-points";
+import React, { useState, useEffect } from "react";
+import { Map, TileLayer, Marker, Popup } from "react-leaflet";
+import { getInterestPoints, createInterestPoint } from "./api/interest-points";
 
 function App() {
+  const [isLoadingInterestPoints, setIsLoadingInterestPoints] = useState(false);
   const [markers, setMarkers] = useState([]);
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
@@ -26,14 +27,20 @@ function App() {
   };
 
   useEffect(() => {
+    setIsLoadingInterestPoints(true);
     getInterestPoints().then((interestPoints) => {
       setMarkers(interestPoints);
+      setIsLoadingInterestPoints(false);
     });
   }, []);
 
+  if (isLoadingInterestPoints) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div style={{height: "100vh", display: "flex", alignItems: "center"}}>
-      <div style={{width: "50%"}}>
+    <div style={{ height: "100vh", display: "flex", alignItems: "center" }}>
+      <div style={{ width: "50%" }}>
         <input
           placeholder="latitude"
           value={latitude}
@@ -61,7 +68,7 @@ function App() {
         </ul>
       </div>
       <Map
-        style={{height: "50vh", width: "50%"}}
+        style={{ height: "50vh", width: "50%" }}
         center={[41.1579, -8.6291]}
         zoom={13}
         maxZoom={18}
@@ -77,7 +84,7 @@ function App() {
           maxZoom={18}
           accessToken="pk.eyJ1IjoicnVpLWZvbnNlY2EiLCJhIjoiY2s4YTJpN3R2MDBscDNtbXhqeGM3emdndiJ9.3LJzQcbcLzQP1evTVWItOQ"
         />
-        {markers.map(({latitude, longitude, title, id}) => {
+        {markers.map(({ latitude, longitude, title, id }) => {
           return (
             <Marker key={id} position={[latitude, longitude]}>
               <Popup>{title}</Popup>

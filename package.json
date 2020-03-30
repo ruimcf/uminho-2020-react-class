@@ -17,6 +17,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "lint": "./node_modules/eslint/bin/eslint.js .",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -28,7 +29,6 @@
   },
   "prettier": {
     "printWidth": 90,
-    "bracketSpacing": false,
     "trailingComma": "es5"
   },
   "browserslist": {

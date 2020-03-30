@@ -1,16 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import {Server, Model} from "miragejs";
+import { Server, Model } from "miragejs";
 
 new Server({
   models: {
     interestPoint: Model,
   },
   routes() {
-    this.get("/interest-points", (db) => {
-      return db.interestPoints.all();
-    });
+    this.get(
+      "/interest-points",
+      (db) => {
+        return db.interestPoints.all();
+      },
+      { timing: 2000 }
+    );
 
     this.get("/interest-points/:id", (db, request) => {
       const id = request.params.id;
@@ -20,9 +24,9 @@ new Server({
 
     this.post("/interest-points", (db, request) => {
       const body = JSON.parse(request.requestBody);
-      const {title, latitude, longitude} = body;
+      const { title, latitude, longitude } = body;
 
-      const newInterestPoint = db.interestPoints.create({title, latitude, longitude});
+      const newInterestPoint = db.interestPoints.create({ title, latitude, longitude });
 
       return newInterestPoint;
     });
