@@ -19,6 +19,7 @@ function App() {
   const [isLoadingInterestPoints, setIsLoadingInterestPoints] = useState(false);
   const [markers, setMarkers] = useState([]);
   const [newInterestPoint, setNewInterestPoint] = useState();
+  const [mapCenter, setMapCenter] = useState();
 
   const handleNewPointSubmit = (event) => {
     event.preventDefault();
@@ -55,6 +56,11 @@ function App() {
     setIsLoadingInterestPoints(true);
     getInterestPoints().then((interestPoints) => {
       setMarkers(interestPoints);
+
+      if (interestPoints.length > 0) {
+        setMapCenter(interestPoints[0]);
+      }
+
       setIsLoadingInterestPoints(false);
     });
   }, []);
@@ -74,19 +80,28 @@ function App() {
                 <Placeholder.Line />
               </Placeholder>
             ) : (
-              <List verticalAlign="middle">
+              <List verticalAlign="middle" divided>
                 {markers.map((point) => {
                   return (
                     <List.Item key={point.id}>
+                      <List.Content floated="left">
+                        <Button
+                          icon="map marker alternate"
+                          color="blue"
+                          onClick={() => setMapCenter(point)}
+                        ></Button>
+                      </List.Content>
                       <List.Content floated="right">
                         <Button
+                          inverted
                           icon="trash"
                           color="red"
                           onClick={() => removePoint(point.id)}
                         ></Button>
                       </List.Content>
-                      <List.Icon name="marker" />
-                      <List.Content>{point.title}</List.Content>
+                      <List.Content>
+                        <List.Header>{point.title}</List.Header>
+                      </List.Content>
                     </List.Item>
                   );
                 })}
@@ -96,7 +111,7 @@ function App() {
           <Segment>
             <Map
               style={{ height: "50vh", width: "100%" }}
-              center={markers.length && [markers[0].latitude, markers[0].longitude]}
+              center={mapCenter && [mapCenter.latitude, mapCenter.longitude]}
               zoom={13}
               maxZoom={18}
               minZoom={5}
