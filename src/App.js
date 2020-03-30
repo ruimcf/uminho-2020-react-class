@@ -5,11 +5,16 @@ import { getInterestPoints, createInterestPoint } from "./api/interest-points";
 function App() {
   const [isLoadingInterestPoints, setIsLoadingInterestPoints] = useState(false);
   const [markers, setMarkers] = useState([]);
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
+  const [newPointName, setNewPointName] = useState("");
+  const [newInterestPoint, setNewInterestPoint] = useState();
 
-  const addNewPoint = () => {
-    createInterestPoint("new interest", latitude, longitude).then((interestPoint) => {
+  const addNewInterestPoint = () => {
+    createInterestPoint(
+      newPointName,
+      newInterestPoint.latitude,
+      newInterestPoint.longitude
+    ).then((interestPoint) => {
+      setNewInterestPoint(undefined);
       setMarkers((prevMarkers) => [...prevMarkers, interestPoint]);
     });
   };
@@ -18,12 +23,12 @@ function App() {
     setMarkers((prevMarkers) => prevMarkers.filter((point) => point.id !== id));
   };
 
-  const handleClick = (event) => {
-    createInterestPoint("new interest", event.latlng.lat, event.latlng.lng).then(
-      (interestPoint) => {
-        setMarkers((prevMarkers) => [...prevMarkers, interestPoint]);
-      }
-    );
+  const openNewInterestPointPopup = (event) => {
+    setNewInterestPoint({ latitude: event.latlng.lat, longitude: event.latlng.lng });
+  };
+
+  const handleNewPointNameChange = (event) => {
+    setNewPointName(event.target.value);
   };
 
   useEffect(() => {
@@ -41,26 +46,11 @@ function App() {
   return (
     <div style={{ height: "100vh", display: "flex", alignItems: "center" }}>
       <div style={{ width: "50%" }}>
-        <input
-          placeholder="latitude"
-          value={latitude}
-          onChange={(evt) =>
-            console.log("called onChange") || setLatitude(evt.target.value)
-          }
-        />
-        <input
-          placeholder="longitude"
-          value={longitude}
-          onChange={(evt) => setLongitude(evt.target.value)}
-        />
-        <button onClick={addNewPoint} disabled={latitude === null || longitude === null}>
-          Add Point
-        </button>
         <ul>
           {markers.map((point) => {
             return (
-              <li>
-                latitude: {point.latitude}; longitude: {point.longitude}{" "}
+              <li key={point.id}>
+                {point.title}
                 <button onClick={() => removePoint(point.id)}>Remove</button>
               </li>
             );
@@ -73,7 +63,7 @@ function App() {
         zoom={13}
         maxZoom={18}
         minZoom={5}
-        onclick={handleClick}
+        onclick={openNewInterestPointPopup}
       >
         <TileLayer
           url="https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}"
@@ -91,6 +81,15 @@ function App() {
             </Marker>
           );
         })}
+        {newInterestPoint && (
+          <Popup
+            key={`${newInterestPoint.latitude}-${newInterestPoint.longitude}`}
+            position={[newInterestPoint.latitude, newInterestPoint.longitude]}
+          >
+            <input placeholder="Insert name..." onChange={handleNewPointNameChange} />
+            <button onClick={addNewInterestPoint}>Add</button>
+          </Popup>
+        )}
       </Map>
     </div>
   );
