@@ -11,7 +11,8 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-leaflet": "^2.6.3",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "semantic-ui-react": "^0.88.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -25,7 +26,9 @@
       "react-app",
       "plugin:prettier/recommended"
     ],
-    "ignorePatterns": ["node_modules"]
+    "ignorePatterns": [
+      "node_modules"
+    ]
   },
   "prettier": {
     "printWidth": 90,

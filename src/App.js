@@ -5,18 +5,26 @@ import {
   createInterestPoint,
   removeInterestPoint,
 } from "./api/interest-points";
+import {
+  List,
+  Button,
+  Header,
+  Container,
+  Segment,
+  Placeholder,
+  Form,
+} from "semantic-ui-react";
 
 function App() {
   const [isLoadingInterestPoints, setIsLoadingInterestPoints] = useState(false);
   const [markers, setMarkers] = useState([]);
-  const [newPointName, setNewPointName] = useState("");
   const [newInterestPoint, setNewInterestPoint] = useState();
 
   const handleNewPointSubmit = (event) => {
     event.preventDefault();
 
     createInterestPoint(
-      newPointName,
+      newInterestPoint.title,
       newInterestPoint.latitude,
       newInterestPoint.longitude
     ).then((interestPoint) => {
@@ -32,11 +40,15 @@ function App() {
   };
 
   const openNewInterestPointPopup = (event) => {
-    setNewInterestPoint({ latitude: event.latlng.lat, longitude: event.latlng.lng });
+    setNewInterestPoint({
+      title: "",
+      latitude: event.latlng.lat,
+      longitude: event.latlng.lng,
+    });
   };
 
-  const handleNewPointNameChange = (event) => {
-    setNewPointName(event.target.value);
+  const handleNewPointTitleChange = (event) => {
+    setNewInterestPoint({ ...newInterestPoint, title: event.target.value });
   };
 
   useEffect(() => {
@@ -47,65 +59,86 @@ function App() {
     });
   }, []);
 
-  if (isLoadingInterestPoints) {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <div style={{ height: "100vh", display: "flex", alignItems: "center" }}>
-      <div style={{ width: "50%" }}>
-        <ul>
-          {markers.map((point) => {
-            return (
-              <li key={point.id}>
-                {point.title}
-                <button onClick={() => removePoint(point.id)}>Remove</button>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-      <Map
-        style={{ height: "50vh", width: "50%" }}
-        center={[41.1579, -8.6291]}
-        zoom={13}
-        maxZoom={18}
-        minZoom={5}
-        onclick={openNewInterestPointPopup}
-      >
-        <TileLayer
-          url="https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}"
-          attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'
-          id="mapbox/streets-v11"
-          tileSize={512}
-          zoomOffset={-1}
-          maxZoom={18}
-          accessToken="pk.eyJ1IjoicnVpLWZvbnNlY2EiLCJhIjoiY2s4YTJpN3R2MDBscDNtbXhqeGM3emdndiJ9.3LJzQcbcLzQP1evTVWItOQ"
-        />
-        {markers.map(({ latitude, longitude, title, id }) => {
-          return (
-            <Marker key={id} position={[latitude, longitude]}>
-              <Popup>{title}</Popup>
-            </Marker>
-          );
-        })}
-        {newInterestPoint && (
-          <Popup
-            key={`${newInterestPoint.latitude}-${newInterestPoint.longitude}`}
-            position={[newInterestPoint.latitude, newInterestPoint.longitude]}
-          >
-            <form onSubmit={handleNewPointSubmit}>
-              <input
-                autoFocus
-                type="text"
-                placeholder="Insert name..."
-                onChange={handleNewPointNameChange}
+    <div>
+      <Header as="h1" textAlign="center">
+        Interest Points
+      </Header>
+      <Container>
+        <Segment.Group>
+          <Segment loading={isLoadingInterestPoints}>
+            {isLoadingInterestPoints ? (
+              <Placeholder>
+                <Placeholder.Line />
+                <Placeholder.Line />
+                <Placeholder.Line />
+              </Placeholder>
+            ) : (
+              <List verticalAlign="middle">
+                {markers.map((point) => {
+                  return (
+                    <List.Item key={point.id}>
+                      <List.Content floated="right">
+                        <Button
+                          icon="trash"
+                          color="red"
+                          onClick={() => removePoint(point.id)}
+                        ></Button>
+                      </List.Content>
+                      <List.Icon name="marker" />
+                      <List.Content>{point.title}</List.Content>
+                    </List.Item>
+                  );
+                })}
+              </List>
+            )}
+          </Segment>
+          <Segment>
+            <Map
+              style={{ height: "50vh", width: "100%" }}
+              center={markers.length && [markers[0].latitude, markers[0].longitude]}
+              zoom={13}
+              maxZoom={18}
+              minZoom={5}
+              onclick={openNewInterestPointPopup}
+            >
+              <TileLayer
+                url="https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}"
+                attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'
+                id="mapbox/streets-v11"
+                tileSize={512}
+                zoomOffset={-1}
+                maxZoom={18}
+                accessToken="pk.eyJ1IjoicnVpLWZvbnNlY2EiLCJhIjoiY2s4YTJpN3R2MDBscDNtbXhqeGM3emdndiJ9.3LJzQcbcLzQP1evTVWItOQ"
               />
-              <button type="submit">Add</button>
-            </form>
-          </Popup>
-        )}
-      </Map>
+              {markers.map(({ latitude, longitude, title, id }) => {
+                return (
+                  <Marker key={id} position={[latitude, longitude]}>
+                    <Popup>{title}</Popup>
+                  </Marker>
+                );
+              })}
+              {newInterestPoint && (
+                <Popup
+                  key={`${newInterestPoint.latitude}-${newInterestPoint.longitude}`}
+                  position={[newInterestPoint.latitude, newInterestPoint.longitude]}
+                >
+                  <Form onSubmit={handleNewPointSubmit}>
+                    <Form.Input
+                      autoFocus
+                      type="text"
+                      placeholder="Insert name..."
+                      value={newInterestPoint.title}
+                      onChange={handleNewPointTitleChange}
+                      action="Add"
+                    />
+                  </Form>
+                </Popup>
+              )}
+            </Map>
+          </Segment>
+        </Segment.Group>
+      </Container>
     </div>
   );
 }
