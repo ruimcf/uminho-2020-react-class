@@ -14,10 +14,21 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "lint": "./node_modules/eslint/bin/eslint.js .",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "plugin:prettier/recommended"
+    ],
+    "ignorePatterns": [
+      "node_modules"
+    ]
+  },
+  "prettier": {
+    "printWidth": 90,
+    "trailingComma": "es5"
   },
   "browserslist": {
     "production": [
@@ -30,5 +41,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "prettier": "^2.0.2"
   }
 }
