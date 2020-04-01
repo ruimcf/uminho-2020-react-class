@@ -1,68 +1,117 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# U. Minho 2020 React Class
 
-## Available Scripts
+This repository hosts the stages that we will be following in the live coding part of the class.
 
-In the project directory, you can run:
+## Dependencies
 
-### `yarn start`
+To start, install [node](https://nodejs.org/en/) and [yarn](https://classic.yarnpkg.com/en/docs/install).
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+It is also recommended to use [Visual Studio Code](https://code.visualstudio.com/) as your editor, as it has great JavaScript Intellisence and plugin support.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## Stages
 
-### `yarn test`
+### 00 / master - Create react app bootstrap project
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+This branch was created with [create-react-app](https://reactjs.org/docs/create-a-new-react-app.html) by running:
 
-### `yarn build`
+```bash
+npx create-react-app uminho-2020-react-class
+```
+If you want to create a starter application on your computer instead of cloning this repository, you can run the same command.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+If you cloned this repository you need to run:
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+```bash
+yarn install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Then, to start the application run:
 
-### `yarn eject`
+```bash
+yarn start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### 01 - Add linter and formatter
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+A linter is a code static analyser helps us by finding problems in our code. Here we will be adding eslint as our code linter.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+A formatter formats our code in order for it to be consistent, helping with readability. For this we will be using PrettierJS. You can install the prettier extension for VS Code and enable "format on save" on the settings to keep your code formatted.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```bash
+git checkout 01-add-linter-and-formatter
+yarn install
+yarn start
+```
 
-## Learn More
+### 02 - Add fetch and listing of interest points
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+A mock server (using miragejs) was added to simulate a backend server.
+The contract for the API will be:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+GET /interest-points => { interestPoints: [{ title: String, latitude: Number, longitude: Number }, ...]}
+```
 
-### Code Splitting
+Then we will use the react lifecycles and state to present the results to the user.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+```bash
+git checkout 02-fetch-interest-points
+yarn install
+yarn start
+```
 
-### Analyzing the Bundle Size
+### 03 - Draw points on interactive map
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+To draw an interactive map we are going to use [Leaflet](https://leafletjs.com/).
+We will also use custom map tiles from [MapBox](https://www.mapbox.com/), so an access token from mapbox is necessary.
+You can create yours by signing in for a free account, or use other free maps.
 
-### Making a Progressive Web App
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+```bash
+git checkout 03-draw-points-on-map
+yarn install
+yarn start
+```
 
-### Advanced Configuration
+### 04 - Add new interest points
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+To have new points we will be using the Leaflet map api that allows us to add click listening events.
+We will then interpret a click on the map as if a new Interest Point is to be added on that location.
+We will also need to collect the Interest Point title in order to finally create in on the backend.
 
-### Deployment
+```bash
+git checkout 04-add-points-on-map
+yarn install
+yarn start
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+### 05 - Revamp UI using a UI Components library
 
-### `yarn build` fails to minify
+Using a design system allows us to have a consistent UI across our application.
+The fastest way to get started is to use existing design systems that provide us the components to use, like bootstrap or the one that we will be using, Semantic UI.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+```bash
+git checkout 05-add-semantic-ui
+yarn install
+yarn start
+```
+
+### 06 - Jump to Interest Point Location
+
+Here we are adding a feature that allows the user to click on one of the items in the interest points list, and center the map on that location.
+
+```bash
+git checkout 06-center-map-on-point
+yarn install
+yarn start
+```
+
+### 07 - Remove Interest Point
+
+Here we will be adding a button in each item on the list that allows the user to remove that specific item.
+
+```bash
+git checkout 07-remove-interest-point
+yarn install
+yarn start
+```
