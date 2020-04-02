@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { getInterestPoints, createInterestPoint } from "./api/interestPoints";
 import InterestPointsMaps from "./InterestPointsMap";
+import {
+  List,
+  Header,
+  Container,
+  Segment,
+  Placeholder,
+  SegmentGroup,
+} from "semantic-ui-react";
 import "./App.css";
 
 function App() {
@@ -29,25 +37,39 @@ function App() {
 
   return (
     <div>
-      <h1>Interest Points</h1>
-      {isLoadingInterestPoints ? (
-        <p>Loading...</p>
-      ) : (
-        <ul>
-          {markers.map((point) => {
-            return (
-              <li>
-                {point.title}: [{point.latitude}, {point.longitude}]
-              </li>
-            );
-          })}
-        </ul>
-      )}
-      <InterestPointsMaps
-        viewport={viewport}
-        markers={markers}
-        submitNewInterestPoint={submitNewInterestPoint}
-      />
+      <Header as="h1" textAlign="center">
+        Interest Points
+      </Header>
+      <Container>
+        <SegmentGroup>
+          <Segment loading={isLoadingInterestPoints}>
+            {isLoadingInterestPoints ? (
+              <Placeholder>
+                <Placeholder.Line />
+                <Placeholder.Line />
+                <Placeholder.Line />
+              </Placeholder>
+            ) : (
+              <List divided>
+                {markers.map((point) => {
+                  return (
+                    <List.Item key={point.id}>
+                      <List.Content>{point.title}</List.Content>
+                    </List.Item>
+                  );
+                })}
+              </List>
+            )}
+          </Segment>
+          <Segment>
+            <InterestPointsMaps
+              viewport={viewport}
+              markers={markers}
+              submitNewInterestPoint={submitNewInterestPoint}
+            />
+          </Segment>
+        </SegmentGroup>
+      </Container>
     </div>
   );
 }

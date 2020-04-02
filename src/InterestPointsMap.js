@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
+import { Form } from "semantic-ui-react";
 
 const InterestPointsMaps = ({ viewport, markers, submitNewInterestPoint }) => {
   const [newInterestPoint, setNewInterestPoint] = useState();
@@ -57,16 +58,16 @@ const InterestPointsMaps = ({ viewport, markers, submitNewInterestPoint }) => {
           key={`${newInterestPoint.latitude}-${newInterestPoint.longitude}`}
           position={[newInterestPoint.latitude, newInterestPoint.longitude]}
         >
-          <form onSubmit={handleNewPointSubmit}>
-            <input
+          <Form onSubmit={handleNewPointSubmit}>
+            <Form.Input
               autoFocus
               type="text"
               placeholder="Insert name..."
               value={newInterestPoint.title}
               onChange={handleNewPointTitleChange}
+              action="Add"
             />
-            <button type="submit">Add</button>
-          </form>
+          </Form>
         </Popup>
       )}
     </Map>
