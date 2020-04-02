@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { getInterestPoints, createInterestPoint } from "./api/interestPoints";
 import InterestPointsMaps from "./InterestPointsMap";
-import {
-  List,
-  Header,
-  Container,
-  Segment,
-  Placeholder,
-  SegmentGroup,
-} from "semantic-ui-react";
+import { Header, Container, Segment, Placeholder, SegmentGroup } from "semantic-ui-react";
 import "./App.css";
+import InterestPointsList from "./InterestPointsList";
 
 function App() {
   const [markers, setMarkers] = useState([]);
@@ -35,6 +29,10 @@ function App() {
     });
   };
 
+  const centerMap = (latitude, longitude) => {
+    setViewport({ center: [latitude, longitude] });
+  };
+
   return (
     <div>
       <Header as="h1" textAlign="center">
@@ -50,15 +48,7 @@ function App() {
                 <Placeholder.Line />
               </Placeholder>
             ) : (
-              <List divided>
-                {markers.map((point) => {
-                  return (
-                    <List.Item key={point.id}>
-                      <List.Content>{point.title}</List.Content>
-                    </List.Item>
-                  );
-                })}
-              </List>
+              <InterestPointsList markers={markers} centerMap={centerMap} />
             )}
           </Segment>
           <Segment>
