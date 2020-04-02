@@ -18,6 +18,12 @@ const createMockServer = () => {
 
         return newInterestPoint;
       });
+
+      this.delete("/interest-points/:id", (db, request) => {
+        const id = request.params.id;
+
+        return db.interestPoints.find(id).destroy();
+      });
     },
     seeds(server) {
       server.schema.interestPoints.create({

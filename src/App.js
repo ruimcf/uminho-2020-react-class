@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { getInterestPoints, createInterestPoint } from "./api/interestPoints";
+import {
+  getInterestPoints,
+  createInterestPoint,
+  removeInterestPoint,
+} from "./api/interestPoints";
 import InterestPointsMaps from "./InterestPointsMap";
 import { Header, Container, Segment, Placeholder, SegmentGroup } from "semantic-ui-react";
 import "./App.css";
@@ -32,6 +36,11 @@ function App() {
   const centerMap = (latitude, longitude) => {
     setViewport({ center: [latitude, longitude] });
   };
+  const removePoint = (id) => {
+    return removeInterestPoint(id).then(() => {
+      setMarkers((prevMarkers) => prevMarkers.filter((point) => point.id !== id));
+    });
+  };
 
   return (
     <div>
@@ -48,7 +57,11 @@ function App() {
                 <Placeholder.Line />
               </Placeholder>
             ) : (
-              <InterestPointsList markers={markers} centerMap={centerMap} />
+              <InterestPointsList
+                markers={markers}
+                centerMap={centerMap}
+                removePoint={removePoint}
+              />
             )}
           </Segment>
           <Segment>
