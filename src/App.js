@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { getInterestPoints } from "./api/interestPoints";
-import { Map, TileLayer, Marker, Popup } from "react-leaflet";
+import { getInterestPoints, createInterestPoint } from "./api/interestPoints";
+import InterestPointsMaps from "./InterestPointsMap";
 import "./App.css";
 
 function App() {
@@ -21,6 +21,12 @@ function App() {
     });
   }, []);
 
+  const submitNewInterestPoint = (title, latitude, longitude) => {
+    return createInterestPoint(title, latitude, longitude).then((interestPoint) => {
+      setMarkers((prevMarkers) => [...prevMarkers, interestPoint]);
+    });
+  };
+
   return (
     <div>
       <h1>Interest Points</h1>
@@ -37,24 +43,11 @@ function App() {
           })}
         </ul>
       )}
-      <Map className="map" viewport={viewport} maxZoom={18} minZoom={5}>
-        <TileLayer
-          url="https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}"
-          attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'
-          id="mapbox/streets-v11"
-          tileSize={512}
-          zoomOffset={-1}
-          maxZoom={18}
-          accessToken="pk.eyJ1IjoicnVpLWZvbnNlY2EiLCJhIjoiY2s4YTJpN3R2MDBscDNtbXhqeGM3emdndiJ9.3LJzQcbcLzQP1evTVWItOQ"
-        />
-        {markers.map(({ latitude, longitude, title, id }) => {
-          return (
-            <Marker key={id} position={[latitude, longitude]}>
-              <Popup>{title}</Popup>
-            </Marker>
-          );
-        })}
-      </Map>
+      <InterestPointsMaps
+        viewport={viewport}
+        markers={markers}
+        submitNewInterestPoint={submitNewInterestPoint}
+      />
     </div>
   );
 }

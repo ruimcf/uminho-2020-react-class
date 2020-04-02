@@ -9,6 +9,15 @@ const createMockServer = () => {
       this.get("/interest-points", (db) => {
         return db.interestPoints.all();
       });
+
+      this.post("/interest-points", (db, request) => {
+        const body = JSON.parse(request.requestBody);
+        const { title, latitude, longitude } = body;
+
+        const newInterestPoint = db.interestPoints.create({ title, latitude, longitude });
+
+        return newInterestPoint;
+      });
     },
     seeds(server) {
       server.schema.interestPoints.create({
