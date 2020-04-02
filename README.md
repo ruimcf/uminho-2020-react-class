@@ -75,7 +75,12 @@ yarn start
 
 ### 04 - Add new interest points
 
-To have new points we will be using the Leaflet map api that allows us to add click listening events.
+The backend contract to create new interest point will be:
+```
+POST /interest-points body: { title: String, latitude: Number, longitude: Number } => { interestPoint: [{ title: String, latitude: Number, longitude: Number, id: Number }, ...]}
+```
+
+To define a new point on the UI we will be using the Leaflet's map api that allows us to add click listening events.
 We will then interpret a click on the map as if a new Interest Point is to be added on that location.
 We will also need to collect the Interest Point title in order to finally create in on the backend.
 
@@ -96,9 +101,12 @@ yarn install
 yarn start
 ```
 
-### 06 - Jump to Interest Point Location
+### 06 - [Challenge] Jump to Interest Point Location
 
-Here we are adding a feature that allows the user to click on one of the items in the interest points list, and center the map on that location.
+Here we want to add a feature that allows the user to click on one of the items in the interest points list, and center the map on that location.
+
+To set the list as clickable we can use the prop [selection from Semantic UI](https://react.semantic-ui.com/elements/list/#variations-selection) and then set a onClick handler for each list item.
+That function should eventually change the viewport state so that the map is re-rendered with a new center.
 
 ```bash
 git checkout 06-center-map-on-point
@@ -106,9 +114,16 @@ yarn install
 yarn start
 ```
 
-### 07 - Remove Interest Point
+### 07 - [Challenge] Remove Interest Point
+
+The backend contract to remove a interest point will be:
+```
+DELETE /interest-points/:id => 204 No content
+```
 
 Here we will be adding a button in each item on the list that allows the user to remove that specific item.
+
+We need to bind the click on the new button with an API call, and change the state of the application, in this case removing the correct marker from the markers list, to re-render the application.
 
 ```bash
 git checkout 07-remove-interest-point
